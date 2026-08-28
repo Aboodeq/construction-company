@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -105,6 +106,15 @@ Route::prefix('contact-messages')->name('contact-messages.')->group(function () 
     Route::get('/{contactMessage}', [ContactMessageController::class, 'show'])->name('show');
     Route::patch('/{contactMessage}/toggle-replied', [ContactMessageController::class, 'toggleReplied'])->name('toggle-replied');
     Route::delete('/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('chats')->name('chats.')->group(function () {
+    Route::get('/', [ChatController::class, 'index'])->name('index');
+    Route::get('/{conversation}', [ChatController::class, 'show'])->name('show');
+    Route::post('/{conversation}/reply', [ChatController::class, 'reply'])->name('reply');
+    Route::get('/{conversation}/poll', [ChatController::class, 'poll'])->name('poll');
+    Route::patch('/{conversation}/toggle-status', [ChatController::class, 'toggleStatus'])->name('toggle-status');
+    Route::delete('/{conversation}', [ChatController::class, 'destroy'])->name('destroy');
 });
 
 Route::prefix('users')->name('users.')->group(function () {

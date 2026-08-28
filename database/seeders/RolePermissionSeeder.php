@@ -55,6 +55,9 @@ class RolePermissionSeeder extends Seeder
             'bookings.delete',
             'contact-messages.view',
             'contact-messages.delete',
+            'chats.view',
+            'chats.reply',
+            'chats.delete',
             // الصفحة الرئيسية
             'homepage.edit',
             // المستخدمين والصلاحيات

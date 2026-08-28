@@ -76,6 +76,12 @@
                         رسائل التواصل
                     </x-admin.nav-link>
                 @endcan
+                @can('chats.view')
+                    <x-admin.nav-link :href="route('admin.chats.index')" :active="request()->routeIs('admin.chats.*')"
+                        icon="chat" :badge="\App\Models\ChatConversation::withUnreadCount()->get()->filter(fn ($c) => $c->unread_count > 0)->count() ?: null">
+                        المحادثات المباشرة
+                    </x-admin.nav-link>
+                @endcan
             </x-admin.nav-section>
 
             <x-admin.nav-section title="الصفحة الرئيسية">
