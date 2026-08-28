@@ -47,14 +47,6 @@
 
             <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">
                 <div class="flex items-center gap-2">
-                    <a href="mailto:{{ $contactMessage->email }}"
-                        class="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg bg-ink px-5 text-sm font-semibold text-brass-soft transition hover:bg-brass hover:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                        </svg>
-                        الرد عبر البريد
-                    </a>
-
                     <form method="POST" action="{{ route('admin.contact-messages.toggle-replied', $contactMessage) }}">
                         @csrf
                         @method('PATCH')
@@ -76,5 +68,15 @@
                 @endcan
             </div>
         </section>
+
+        <div class="mt-6">
+            <x-admin.email-reply-panel
+                :action="route('admin.contact-messages.reply-email', $contactMessage)"
+                :toName="$contactMessage->name"
+                :toEmail="$contactMessage->email"
+                :defaultSubject="'رد بخصوص رسالتك: '.($contactMessage->subject ?? 'تواصل معنا')"
+                :replies="$contactMessage->emailReplies"
+            />
+        </div>
     </div>
 </x-admin.layouts.app>

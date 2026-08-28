@@ -91,6 +91,7 @@ Route::prefix('quote-requests')->name('quote-requests.')->group(function () {
     Route::get('/export', [QuoteRequestController::class, 'export'])->name('export');
     Route::get('/{quoteRequest}', [QuoteRequestController::class, 'show'])->name('show');
     Route::patch('/{quoteRequest}/status', [QuoteRequestController::class, 'updateStatus'])->name('update-status');
+    Route::post('/{quoteRequest}/reply-email', [QuoteRequestController::class, 'replyEmail'])->name('reply-email');
     Route::delete('/{quoteRequest}', [QuoteRequestController::class, 'destroy'])->name('destroy');
 });
 
@@ -98,6 +99,7 @@ Route::prefix('bookings')->name('bookings.')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('index');
     Route::get('/{booking}/edit', [BookingController::class, 'edit'])->name('edit');
     Route::put('/{booking}', [BookingController::class, 'update'])->name('update');
+    Route::post('/{booking}/reply-email', [BookingController::class, 'replyEmail'])->name('reply-email');
     Route::delete('/{booking}', [BookingController::class, 'destroy'])->name('destroy');
 });
 
@@ -105,6 +107,7 @@ Route::prefix('contact-messages')->name('contact-messages.')->group(function () 
     Route::get('/', [ContactMessageController::class, 'index'])->name('index');
     Route::get('/{contactMessage}', [ContactMessageController::class, 'show'])->name('show');
     Route::patch('/{contactMessage}/toggle-replied', [ContactMessageController::class, 'toggleReplied'])->name('toggle-replied');
+    Route::post('/{contactMessage}/reply-email', [ContactMessageController::class, 'replyEmail'])->name('reply-email');
     Route::delete('/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('destroy');
 });
 

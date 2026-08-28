@@ -79,6 +79,18 @@
                     @endif
                 </section>
 
+                @can('quote-requests.edit')
+                    @if ($quoteRequest->email)
+                        <x-admin.email-reply-panel
+                            :action="route('admin.quote-requests.reply-email', $quoteRequest)"
+                            :toName="$quoteRequest->name"
+                            :toEmail="$quoteRequest->email"
+                            :defaultSubject="'رد بخصوص طلب السعر الخاص بك'"
+                            :replies="$quoteRequest->emailReplies"
+                        />
+                    @endif
+                @endcan
+
                 @if ($quoteRequest->files->isNotEmpty())
                     <section class="rounded-lg border border-line bg-surface p-6">
                         <h3 class="font-display text-lg font-semibold text-ink">الملفات المرفقة</h3>

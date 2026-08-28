@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasEmailReplies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ContactMessage extends Model
 {
-    use HasFactory;
+    use HasFactory, HasEmailReplies;
     protected $fillable = [
         'name',
         'email',

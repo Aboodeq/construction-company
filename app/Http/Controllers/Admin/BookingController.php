@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\SendsEmailReplies;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
@@ -9,6 +10,8 @@ use Illuminate\Validation\Rule;
 
 class BookingController extends Controller
 {
+    use SendsEmailReplies;
+
     public function index(Request $request)
     {
         $this->authorize('bookings.view');
@@ -63,6 +66,15 @@ class BookingController extends Controller
         return redirect()
             ->route('admin.bookings.edit', $booking)
             ->with('success', 'تم حفظ التغييرات بنجاح.');
+    }
+
+    public function replyEmail(Request $request, Booking $booking)
+    {
+        $this->authorize('bookings.edit');
+
+        abort_unless($booking->email, 422, 'لا يوجد بريد إلكتروني لهذا الحجز.');
+
+        return $this->sendEmailReply($request, $booking, $booking->email, $booking->name);
     }
 
     public function destroy(Booking $booking)

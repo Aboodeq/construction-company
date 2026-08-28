@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\SendsEmailReplies;
 use App\Http\Controllers\Controller;
 use App\Models\QuoteRequest;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class QuoteRequestController extends Controller
 {
+    use SendsEmailReplies;
+
     public function index(Request $request)
     {
         $this->authorize('quote-requests.view');
@@ -61,6 +64,15 @@ class QuoteRequestController extends Controller
         $quoteRequest->update(['status' => $request->input('status')]);
 
         return back()->with('success', 'تم تحديث حالة الطلب.');
+    }
+
+    public function replyEmail(Request $request, QuoteRequest $quoteRequest)
+    {
+        $this->authorize('quote-requests.edit');
+
+        abort_unless($quoteRequest->email, 422, 'لا يوجد بريد إلكتروني لهذا الطلب.');
+
+        return $this->sendEmailReply($request, $quoteRequest, $quoteRequest->email, $quoteRequest->name);
     }
 
     public function destroy(QuoteRequest $quoteRequest)

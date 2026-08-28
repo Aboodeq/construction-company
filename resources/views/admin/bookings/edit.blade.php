@@ -23,6 +23,20 @@
             </p>
         </div>
 
+        @can('bookings.edit')
+            @if ($booking->email)
+                <div class="mb-6">
+                    <x-admin.email-reply-panel
+                        :action="route('admin.bookings.reply-email', $booking)"
+                        :toName="$booking->name"
+                        :toEmail="$booking->email"
+                        :defaultSubject="'رد بخصوص حجزك'"
+                        :replies="$booking->emailReplies"
+                    />
+                </div>
+            @endif
+        @endcan
+
         <form method="POST" action="{{ route('admin.bookings.update', $booking) }}"
             class="space-y-6 rounded-lg border border-line bg-surface p-6">
             @csrf

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\SendsEmailReplies;
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
 class ContactMessageController extends Controller
 {
+    use SendsEmailReplies;
+
     public function index(Request $request)
     {
         $this->authorize('contact-messages.view');
@@ -51,6 +54,17 @@ class ContactMessageController extends Controller
         $contactMessage->update(['is_replied' => ! $contactMessage->is_replied]);
 
         return back()->with('success', $contactMessage->is_replied ? 'تم وضع علامة "تم الرد".' : 'تم إلغاء علامة "تم الرد".');
+    }
+
+    public function replyEmail(Request $request, ContactMessage $contactMessage)
+    {
+        $this->authorize('contact-messages.view');
+
+        $response = $this->sendEmailReply($request, $contactMessage, $contactMessage->email, $contactMessage->name);
+
+        $contactMessage->update(['is_replied' => true]);
+
+        return $response;
     }
 
     public function destroy(ContactMessage $contactMessage)
