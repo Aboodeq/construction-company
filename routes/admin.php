@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectImageController;
@@ -35,6 +36,16 @@ Route::prefix('projects')->name('projects.')->group(function () {
     Route::patch('/{project}/toggle-featured', [ProjectController::class, 'toggleFeatured'])->name('toggle-featured');
     Route::patch('/{project}/toggle-published', [ProjectController::class, 'togglePublished'])->name('toggle-published');
     Route::delete('/{project}/images/{image}', [ProjectImageController::class, 'destroy'])->name('images.destroy');
+});
+
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/', [BlogPostController::class, 'index'])->name('index');
+    Route::get('/create', [BlogPostController::class, 'create'])->name('create');
+    Route::post('/', [BlogPostController::class, 'store'])->name('store');
+    Route::get('/{blogPost}/edit', [BlogPostController::class, 'edit'])->name('edit');
+    Route::put('/{blogPost}', [BlogPostController::class, 'update'])->name('update');
+    Route::delete('/{blogPost}', [BlogPostController::class, 'destroy'])->name('destroy');
+    Route::patch('/{blogPost}/toggle-published', [BlogPostController::class, 'togglePublished'])->name('toggle-published');
 });
 
 Route::prefix('users')->name('users.')->group(function () {
