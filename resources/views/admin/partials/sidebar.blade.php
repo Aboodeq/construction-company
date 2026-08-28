@@ -47,8 +47,11 @@
                 @can('testimonials.view')
                     <x-admin.nav-link :href="route('admin.testimonials.index')" :active="request()->routeIs('admin.testimonials.*')" icon="star">آراء العملاء</x-admin.nav-link>
                 @endcan
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="question">الأسئلة
-                    الشائعة</x-admin.nav-link>
+                @can('faqs.view')
+                    <x-admin.nav-link :href="route('admin.faqs.index')" :active="request()->routeIs('admin.faqs.*')" icon="question">
+                        الأسئلة الشائعة
+                    </x-admin.nav-link>
+                @endcan
                 <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="users">فريق العمل</x-admin.nav-link>
             </x-admin.nav-section>
 

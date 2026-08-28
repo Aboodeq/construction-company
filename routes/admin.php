@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectImageController;
@@ -58,6 +59,16 @@ Route::prefix('testimonials')->name('testimonials.')->group(function () {
     Route::delete('/{testimonial}', [TestimonialController::class, 'destroy'])->name('destroy');
     Route::patch('/{testimonial}/toggle-featured', [TestimonialController::class, 'toggleFeatured'])->name('toggle-featured');
     Route::patch('/{testimonial}/toggle-published', [TestimonialController::class, 'togglePublished'])->name('toggle-published');
+});
+
+Route::prefix('faqs')->name('faqs.')->group(function () {
+    Route::get('/', [FaqController::class, 'index'])->name('index');
+    Route::get('/create', [FaqController::class, 'create'])->name('create');
+    Route::post('/', [FaqController::class, 'store'])->name('store');
+    Route::get('/{faq}/edit', [FaqController::class, 'edit'])->name('edit');
+    Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
+    Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
+    Route::patch('/{faq}/toggle-published', [FaqController::class, 'togglePublished'])->name('toggle-published');
 });
 
 Route::prefix('users')->name('users.')->group(function () {
