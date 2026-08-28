@@ -35,8 +35,12 @@
             </x-admin.nav-link>
 
             <x-admin.nav-section title="المحتوى">
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="wrench">الخدمات</x-admin.nav-link>
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="building">المشاريع</x-admin.nav-link>
+                @can('services.view')
+                    <x-admin.nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')" icon="wrench">الخدمات</x-admin.nav-link>
+                @endcan
+                @can('projects.view')
+                    <x-admin.nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects.*')" icon="building">المشاريع</x-admin.nav-link>
+                @endcan
                 <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="document">المدونة</x-admin.nav-link>
                 <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="star">الشهادات</x-admin.nav-link>
                 <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="question">الأسئلة
@@ -70,14 +74,16 @@
         {{-- User menu --}}
         <div class="border-t border-line p-4">
             <div class="flex items-center gap-3 rounded-lg px-2 py-2">
-                <div
-                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brass-soft text-sm font-semibold text-brass">
-                    {{ mb_substr(auth()->user()->name, 0, 1) }}
-                </div>
-                <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm font-medium text-ink">{{ auth()->user()->name }}</p>
-                    <p class="truncate text-xs text-ink-soft">{{ auth()->user()->getRoleNames()->first() }}</p>
-                </div>
+                <a href="{{ route('admin.profile.edit') }}" class="flex min-w-0 flex-1 items-center gap-3">
+                    <div
+                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brass-soft text-sm font-semibold text-brass">
+                        {{ mb_substr(auth()->user()->name, 0, 1) }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-sm font-medium text-ink">{{ auth()->user()->name }}</p>
+                        <p class="truncate text-xs text-ink-soft">{{ auth()->user()->getRoleNames()->first() }}</p>
+                    </div>
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="shrink-0 text-ink-soft transition hover:text-brass"
