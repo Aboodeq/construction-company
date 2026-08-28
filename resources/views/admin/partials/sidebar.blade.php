@@ -58,10 +58,24 @@
             </x-admin.nav-section>
 
             <x-admin.nav-section title="الطلبات">
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="clipboard">طلبات
-                    الأسعار</x-admin.nav-link>
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="calendar">الحجوزات</x-admin.nav-link>
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="mail">رسائل التواصل</x-admin.nav-link>
+                @can('quote-requests.view')
+                    <x-admin.nav-link :href="route('admin.quote-requests.index')" :active="request()->routeIs('admin.quote-requests.*')"
+                        icon="clipboard" :badge="\App\Models\QuoteRequest::where('status', 'new')->count() ?: null">
+                        طلبات الأسعار
+                    </x-admin.nav-link>
+                @endcan
+                @can('bookings.view')
+                    <x-admin.nav-link :href="route('admin.bookings.index')" :active="request()->routeIs('admin.bookings.*')"
+                        icon="calendar" :badge="\App\Models\Booking::where('status', 'pending')->count() ?: null">
+                        الحجوزات
+                    </x-admin.nav-link>
+                @endcan
+                @can('contact-messages.view')
+                    <x-admin.nav-link :href="route('admin.contact-messages.index')" :active="request()->routeIs('admin.contact-messages.*')"
+                        icon="mail" :badge="\App\Models\ContactMessage::where('is_read', false)->count() ?: null">
+                        رسائل التواصل
+                    </x-admin.nav-link>
+                @endcan
             </x-admin.nav-section>
 
             <x-admin.nav-section title="الصفحة الرئيسية">

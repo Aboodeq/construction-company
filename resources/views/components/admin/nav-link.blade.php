@@ -1,4 +1,4 @@
-@props(['href', 'active' => false, 'icon' => 'document'])
+@props(['href', 'active' => false, 'icon' => 'document', 'badge' => null])
 
 @php
     $icons = [
@@ -50,4 +50,9 @@
     <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}" />
 </svg>
 <span class="min-w-0 flex-1 truncate">{{ $slot }}</span>
+@if ($badge)
+    <span class="shrink-0 rounded-full bg-brass px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+        {{ $badge }}
+    </span>
+@endif
 </a>

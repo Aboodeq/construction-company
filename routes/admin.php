@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectImageController;
+use App\Http\Controllers\Admin\QuoteRequestController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceImageController;
@@ -80,6 +83,28 @@ Route::prefix('team')->name('team.')->group(function () {
     Route::put('/{teamMember}', [TeamMemberController::class, 'update'])->name('update');
     Route::delete('/{teamMember}', [TeamMemberController::class, 'destroy'])->name('destroy');
     Route::patch('/{teamMember}/toggle-published', [TeamMemberController::class, 'togglePublished'])->name('toggle-published');
+});
+
+Route::prefix('quote-requests')->name('quote-requests.')->group(function () {
+    Route::get('/', [QuoteRequestController::class, 'index'])->name('index');
+    Route::get('/export', [QuoteRequestController::class, 'export'])->name('export');
+    Route::get('/{quoteRequest}', [QuoteRequestController::class, 'show'])->name('show');
+    Route::patch('/{quoteRequest}/status', [QuoteRequestController::class, 'updateStatus'])->name('update-status');
+    Route::delete('/{quoteRequest}', [QuoteRequestController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('bookings')->name('bookings.')->group(function () {
+    Route::get('/', [BookingController::class, 'index'])->name('index');
+    Route::get('/{booking}/edit', [BookingController::class, 'edit'])->name('edit');
+    Route::put('/{booking}', [BookingController::class, 'update'])->name('update');
+    Route::delete('/{booking}', [BookingController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
+    Route::get('/', [ContactMessageController::class, 'index'])->name('index');
+    Route::get('/{contactMessage}', [ContactMessageController::class, 'show'])->name('show');
+    Route::patch('/{contactMessage}/toggle-replied', [ContactMessageController::class, 'toggleReplied'])->name('toggle-replied');
+    Route::delete('/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('destroy');
 });
 
 Route::prefix('users')->name('users.')->group(function () {

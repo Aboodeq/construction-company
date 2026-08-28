@@ -47,6 +47,7 @@ class RolePermissionSeeder extends Seeder
             'team.delete',
             // الطلبات
             'quote-requests.view',
+            'quote-requests.edit',
             'quote-requests.delete',
             'quote-requests.export',
             'bookings.view',
