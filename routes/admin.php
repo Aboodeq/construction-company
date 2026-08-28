@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProjectImageController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceImageController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
@@ -46,6 +47,17 @@ Route::prefix('blog')->name('blog.')->group(function () {
     Route::put('/{blogPost}', [BlogPostController::class, 'update'])->name('update');
     Route::delete('/{blogPost}', [BlogPostController::class, 'destroy'])->name('destroy');
     Route::patch('/{blogPost}/toggle-published', [BlogPostController::class, 'togglePublished'])->name('toggle-published');
+});
+
+Route::prefix('testimonials')->name('testimonials.')->group(function () {
+    Route::get('/', [TestimonialController::class, 'index'])->name('index');
+    Route::get('/create', [TestimonialController::class, 'create'])->name('create');
+    Route::post('/', [TestimonialController::class, 'store'])->name('store');
+    Route::get('/{testimonial}/edit', [TestimonialController::class, 'edit'])->name('edit');
+    Route::put('/{testimonial}', [TestimonialController::class, 'update'])->name('update');
+    Route::delete('/{testimonial}', [TestimonialController::class, 'destroy'])->name('destroy');
+    Route::patch('/{testimonial}/toggle-featured', [TestimonialController::class, 'toggleFeatured'])->name('toggle-featured');
+    Route::patch('/{testimonial}/toggle-published', [TestimonialController::class, 'togglePublished'])->name('toggle-published');
 });
 
 Route::prefix('users')->name('users.')->group(function () {
