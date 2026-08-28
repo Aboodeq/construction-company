@@ -36,9 +36,15 @@ class RoleController extends Controller
     {
         $this->authorize('roles.view');
 
-        $roles = Role::withCount(['permissions', 'users'])->orderBy('name')->get();
+        $roles = Role::with(['permissions', 'users' => fn ($query) => $query->limit(4)])
+            ->withCount('users')
+            ->orderBy('name')
+            ->get();
 
-        return view('admin.roles.index', compact('roles'));
+        $totalPermissions = Permission::count();
+        $groupLabels = self::GROUP_LABELS;
+
+        return view('admin.roles.index', compact('roles', 'totalPermissions', 'groupLabels'));
     }
 
     public function create()
@@ -52,7 +58,7 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request): RedirectResponse
     {
-        $role = Role::create(['name' => $request->string('name')]);
+        $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permissions', []));
 
         return redirect()
@@ -76,7 +82,7 @@ class RoleController extends Controller
             return back()->with('error', 'لا يمكن تعديل صلاحيات دور المدير العام - يملك جميع الصلاحيات دائمًا.');
         }
 
-        $role->update(['name' => $request->string('name')]);
+        $role->update(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permissions', []));
 
         return redirect()

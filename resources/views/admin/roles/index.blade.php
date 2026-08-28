@@ -1,10 +1,18 @@
 @php
     $roleLabels = ['admin' => 'مدير عام', 'editor' => 'محرر'];
     $protectedRoles = ['admin', 'editor'];
+
+    $tiers = [
+        'admin' => ['badge' => 'bg-ink text-brass-soft', 'bar' => 'bg-ink'],
+        'editor' => ['badge' => 'bg-forest/10 text-forest', 'bar' => 'bg-forest'],
+        'custom' => ['badge' => 'bg-brass-soft text-brass', 'bar' => 'bg-brass'],
+    ];
+
+    $totalUsersAssigned = $roles->sum('users_count');
 @endphp
 
 <x-admin.layouts.app title="الأدوار والصلاحيات">
-    <div class="mx-auto w-full max-w-4xl">
+    <div class="mx-auto w-full max-w-6xl">
         <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div class="min-w-0">
                 <h2 class="font-display text-2xl font-semibold text-ink">الأدوار والصلاحيات</h2>
@@ -30,35 +38,102 @@
             @endcan
         </div>
 
-        <section class="overflow-hidden rounded-lg border border-line bg-surface">
-            <div class="divide-y divide-line">
-                @foreach ($roles as $role)
-                    <article class="flex flex-wrap items-center gap-4 p-5">
-                        <div class="min-w-0 flex-1">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <p class="font-semibold text-ink">{{ $roleLabels[$role->name] ?? $role->name }}</p>
-                                @if (in_array($role->name, $protectedRoles, true))
-                                    <span class="inline-flex rounded-full border border-line bg-paper px-2.5 py-1 text-xs font-medium text-ink-soft">
-                                        دور أساسي
-                                    </span>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="rounded-lg border border-line bg-surface p-5">
+                <p class="text-xs font-medium text-ink-soft">إجمالي الأدوار</p>
+                <div class="mt-4 flex items-end justify-between gap-3">
+                    <p class="font-display text-3xl font-bold text-ink">{{ $roles->count() }}</p>
+                    <span class="h-10 w-1 rounded-full bg-ink"></span>
+                </div>
+            </div>
+            <div class="rounded-lg border border-line bg-surface p-5">
+                <p class="text-xs font-medium text-ink-soft">صلاحيات معرّفة بالنظام</p>
+                <div class="mt-4 flex items-end justify-between gap-3">
+                    <p class="font-display text-3xl font-bold text-brass">{{ $totalPermissions }}</p>
+                    <span class="h-10 w-1 rounded-full bg-brass"></span>
+                </div>
+            </div>
+            <div class="rounded-lg border border-line bg-surface p-5">
+                <p class="text-xs font-medium text-ink-soft">مستخدمون مرتبطون بأدوار</p>
+                <div class="mt-4 flex items-end justify-between gap-3">
+                    <p class="font-display text-3xl font-bold text-forest">{{ $totalUsersAssigned }}</p>
+                    <span class="h-10 w-1 rounded-full bg-forest"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            @foreach ($roles as $role)
+                @php
+                    $tierKey = in_array($role->name, $protectedRoles, true) ? $role->name : 'custom';
+                    $tier = $tiers[$tierKey];
+                    $label = $roleLabels[$role->name] ?? $role->name;
+                    $permissionCount = $role->permissions->count();
+                    $coverage = $totalPermissions > 0 ? round(($permissionCount / $totalPermissions) * 100) : 0;
+                    $touchedGroups = collect($groupLabels)
+                        ->filter(fn ($groupLabel, $prefix) => $role->permissions->contains(fn ($p) => str_starts_with($p->name, $prefix.'.')))
+                        ->values();
+                @endphp
+                <article class="relative overflow-hidden rounded-xl border border-line bg-surface p-6 transition hover:border-brass/30 hover:shadow-lg">
+                    <div class="absolute inset-x-0 top-0 h-1 {{ $tier['bar'] }}"></div>
+
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-display text-lg font-bold {{ $tier['badge'] }}">
+                                {{ mb_substr($label, 0, 1) }}
+                            </div>
+                            <div class="min-w-0">
+                                <h3 class="truncate font-display text-lg font-semibold text-ink">{{ $label }}</h3>
+                                @if ($tierKey === 'custom')
+                                    <p class="truncate text-xs text-ink-soft">{{ $role->name }}</p>
                                 @endif
                             </div>
-                            @if (! in_array($role->name, $protectedRoles, true))
-                                <p class="mt-1 text-xs text-ink-soft">{{ $role->name }}</p>
+                        </div>
+                        @if ($tierKey !== 'custom')
+                            <span class="shrink-0 rounded-full border border-line bg-paper px-2.5 py-1 text-xs font-medium text-ink-soft">
+                                أساسي
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="mt-5">
+                        <div class="flex items-center justify-between text-xs text-ink-soft">
+                            <span>الصلاحيات</span>
+                            <span class="font-medium text-ink">{{ $permissionCount }} / {{ $totalPermissions }}</span>
+                        </div>
+                        <div class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-paper">
+                            <div class="h-full rounded-full {{ $tier['bar'] }}" style="width: {{ $coverage }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex min-h-7 flex-wrap gap-1.5">
+                        @forelse ($touchedGroups as $groupLabel)
+                            <span class="rounded-full border border-line bg-paper px-2.5 py-1 text-xs text-ink-soft">
+                                {{ $groupLabel }}
+                            </span>
+                        @empty
+                            <span class="text-xs text-ink-soft/60">بلا صلاحيات محددة بعد</span>
+                        @endforelse
+                    </div>
+
+                    <div class="mt-5 flex items-center justify-between border-t border-line pt-4">
+                        <div class="flex items-center">
+                            @forelse ($role->users as $user)
+                                <div class="-ms-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-surface bg-brass-soft text-xs font-semibold text-brass first:ms-0"
+                                    title="{{ $user->name }}">
+                                    {{ mb_substr($user->name, 0, 1) }}
+                                </div>
+                            @empty
+                                <span class="text-xs text-ink-soft">لا يوجد مستخدمون</span>
+                            @endforelse
+                            @if ($role->users_count > $role->users->count())
+                                <div class="-ms-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-surface bg-ink text-xs font-semibold text-brass-soft">
+                                    +{{ $role->users_count - $role->users->count() }}
+                                </div>
                             @endif
                         </div>
 
-                        <div class="text-sm">
-                            <p class="text-xs font-medium text-ink-soft">الصلاحيات</p>
-                            <p class="mt-1 text-ink">{{ $role->permissions_count }}</p>
-                        </div>
-
-                        <div class="text-sm">
-                            <p class="text-xs font-medium text-ink-soft">المستخدمون</p>
-                            <p class="mt-1 text-ink">{{ $role->users_count }}</p>
-                        </div>
-
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1.5">
                             @can('roles.edit')
                                 @if ($role->name !== 'admin')
                                     <a href="{{ route('admin.roles.edit', $role) }}"
@@ -93,9 +168,9 @@
                                 @endif
                             @endcan
                         </div>
-                    </article>
-                @endforeach
-            </div>
-        </section>
+                    </div>
+                </article>
+            @endforeach
+        </div>
     </div>
 </x-admin.layouts.app>
