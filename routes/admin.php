@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectImageController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceImageController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('admin.test-layout');
@@ -33,6 +35,25 @@ Route::prefix('projects')->name('projects.')->group(function () {
     Route::patch('/{project}/toggle-featured', [ProjectController::class, 'toggleFeatured'])->name('toggle-featured');
     Route::patch('/{project}/toggle-published', [ProjectController::class, 'togglePublished'])->name('toggle-published');
     Route::delete('/{project}/images/{image}', [ProjectImageController::class, 'destroy'])->name('images.destroy');
+});
+
+Route::prefix('users')->name('users.')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/create', [UserController::class, 'create'])->name('create');
+    Route::post('/', [UserController::class, 'store'])->name('store');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::put('/{user}', [UserController::class, 'update'])->name('update');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    Route::patch('/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('toggle-active');
+});
+
+Route::prefix('roles')->name('roles.')->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('index');
+    Route::get('/create', [RoleController::class, 'create'])->name('create');
+    Route::post('/', [RoleController::class, 'store'])->name('store');
+    Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit');
+    Route::put('/{role}', [RoleController::class, 'update'])->name('update');
+    Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy');
 });
 
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

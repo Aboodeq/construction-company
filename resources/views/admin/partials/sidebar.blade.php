@@ -62,12 +62,16 @@
                 <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="layout">أقسام الصفحات</x-admin.nav-link>
             </x-admin.nav-section>
 
-            @role('admin')
+            @canany(['users.view', 'roles.view', 'settings.edit'])
                 <x-admin.nav-section title="النظام">
-                    <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="user-group">المستخدمون</x-admin.nav-link>
-                    <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="settings">الإعدادات</x-admin.nav-link>
+                    @can('users.view')
+                        <x-admin.nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" icon="user-group">المستخدمون</x-admin.nav-link>
+                    @endcan
+                    @can('roles.view')
+                        <x-admin.nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')" icon="settings">الأدوار والصلاحيات</x-admin.nav-link>
+                    @endcan
                 </x-admin.nav-section>
-            @endrole
+            @endcanany
 
         </nav>
 
