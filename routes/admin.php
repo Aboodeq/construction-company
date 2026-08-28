@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ChatController;
+use App\Http\Controllers\Admin\CompanyStatisticController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\HeroSlideController;
+use App\Http\Controllers\Admin\PageSectionController;
+use App\Http\Controllers\Admin\ProcessStepController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectImageController;
@@ -13,6 +17,7 @@ use App\Http\Controllers\Admin\QuoteRequestController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceImageController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
@@ -118,6 +123,45 @@ Route::prefix('chats')->name('chats.')->group(function () {
     Route::get('/{conversation}/poll', [ChatController::class, 'poll'])->name('poll');
     Route::patch('/{conversation}/toggle-status', [ChatController::class, 'toggleStatus'])->name('toggle-status');
     Route::delete('/{conversation}', [ChatController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('hero-slides')->name('hero-slides.')->group(function () {
+    Route::get('/', [HeroSlideController::class, 'index'])->name('index');
+    Route::get('/create', [HeroSlideController::class, 'create'])->name('create');
+    Route::post('/', [HeroSlideController::class, 'store'])->name('store');
+    Route::get('/{heroSlide}/edit', [HeroSlideController::class, 'edit'])->name('edit');
+    Route::put('/{heroSlide}', [HeroSlideController::class, 'update'])->name('update');
+    Route::delete('/{heroSlide}', [HeroSlideController::class, 'destroy'])->name('destroy');
+    Route::patch('/{heroSlide}/toggle-published', [HeroSlideController::class, 'togglePublished'])->name('toggle-published');
+});
+
+Route::prefix('company-statistics')->name('company-statistics.')->group(function () {
+    Route::get('/', [CompanyStatisticController::class, 'index'])->name('index');
+    Route::get('/create', [CompanyStatisticController::class, 'create'])->name('create');
+    Route::post('/', [CompanyStatisticController::class, 'store'])->name('store');
+    Route::get('/{companyStatistic}/edit', [CompanyStatisticController::class, 'edit'])->name('edit');
+    Route::put('/{companyStatistic}', [CompanyStatisticController::class, 'update'])->name('update');
+    Route::delete('/{companyStatistic}', [CompanyStatisticController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('process-steps')->name('process-steps.')->group(function () {
+    Route::get('/', [ProcessStepController::class, 'index'])->name('index');
+    Route::get('/create', [ProcessStepController::class, 'create'])->name('create');
+    Route::post('/', [ProcessStepController::class, 'store'])->name('store');
+    Route::get('/{processStep}/edit', [ProcessStepController::class, 'edit'])->name('edit');
+    Route::put('/{processStep}', [ProcessStepController::class, 'update'])->name('update');
+    Route::delete('/{processStep}', [ProcessStepController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('page-sections')->name('page-sections.')->group(function () {
+    Route::get('/', [PageSectionController::class, 'index'])->name('index');
+    Route::get('/{pageSection}/edit', [PageSectionController::class, 'edit'])->name('edit');
+    Route::put('/{pageSection}', [PageSectionController::class, 'update'])->name('update');
+});
+
+Route::prefix('settings')->name('settings.')->group(function () {
+    Route::get('/', [SettingController::class, 'index'])->name('index');
+    Route::put('/', [SettingController::class, 'update'])->name('update');
 });
 
 Route::prefix('users')->name('users.')->group(function () {

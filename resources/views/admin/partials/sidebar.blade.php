@@ -84,17 +84,22 @@
                 @endcan
             </x-admin.nav-section>
 
-            <x-admin.nav-section title="الصفحة الرئيسية">
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="image">شرائح البانر</x-admin.nav-link>
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="chart">الإحصائيات</x-admin.nav-link>
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="flag">مراحل العمل</x-admin.nav-link>
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="layout">أقسام الصفحات</x-admin.nav-link>
-            </x-admin.nav-section>
+            @can('homepage.edit')
+                <x-admin.nav-section title="الصفحة الرئيسية">
+                    <x-admin.nav-link :href="route('admin.hero-slides.index')" :active="request()->routeIs('admin.hero-slides.*')" icon="image">شرائح البانر</x-admin.nav-link>
+                    <x-admin.nav-link :href="route('admin.company-statistics.index')" :active="request()->routeIs('admin.company-statistics.*')" icon="chart">الإحصائيات</x-admin.nav-link>
+                    <x-admin.nav-link :href="route('admin.process-steps.index')" :active="request()->routeIs('admin.process-steps.*')" icon="flag">مراحل العمل</x-admin.nav-link>
+                    <x-admin.nav-link :href="route('admin.page-sections.index')" :active="request()->routeIs('admin.page-sections.*')" icon="layout">أقسام الصفحات</x-admin.nav-link>
+                </x-admin.nav-section>
+            @endcan
 
             @canany(['users.view', 'roles.view', 'settings.edit'])
                 <x-admin.nav-section title="النظام">
                     @can('users.view')
                         <x-admin.nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" icon="user-group">المستخدمون</x-admin.nav-link>
+                    @endcan
+                    @can('settings.edit')
+                        <x-admin.nav-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')" icon="settings">الإعدادات</x-admin.nav-link>
                     @endcan
                     @can('roles.view')
                         <x-admin.nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.*')" icon="settings">الأدوار والصلاحيات</x-admin.nav-link>
