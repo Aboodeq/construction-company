@@ -2,8 +2,8 @@
 @plugin "@tailwindcss/forms";
 
 @theme {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-sans: "IBM Plex Sans Arabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Reem Kufi", "Fraunces", ui-serif, Georgia, serif;
 
     --color-paper: #f8f7f4;
     --color-surface: #ffffff;
@@ -16,4 +16,135 @@
 }
 [x-cloak] {
     display: none !important;
+}
+
+/* ---------- Entrance choreography (auth screens) ---------- */
+@keyframes reveal-up {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes drift {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(-4%, 5%) scale(1.1);
+    }
+}
+
+@keyframes draw-line {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes shimmer-sweep {
+    from {
+        transform: translateX(-130%) skewX(-12deg);
+    }
+    to {
+        transform: translateX(230%) skewX(-12deg);
+    }
+}
+
+.reveal {
+    opacity: 0;
+    animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.reveal-d1 {
+    animation-delay: 0.08s;
+}
+.reveal-d2 {
+    animation-delay: 0.16s;
+}
+.reveal-d3 {
+    animation-delay: 0.24s;
+}
+.reveal-d4 {
+    animation-delay: 0.32s;
+}
+.reveal-d5 {
+    animation-delay: 0.4s;
+}
+.reveal-d6 {
+    animation-delay: 0.48s;
+}
+.reveal-d7 {
+    animation-delay: 0.56s;
+}
+
+.blueprint-drift {
+    animation: drift 22s ease-in-out infinite;
+}
+.blueprint-drift-slow {
+    animation: drift 30s ease-in-out infinite reverse;
+}
+
+.draw-line {
+    stroke-dasharray: 700;
+    stroke-dashoffset: 700;
+    animation: draw-line 1.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.blueprint-grid {
+    background-image:
+        linear-gradient(rgba(243, 233, 205, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(243, 233, 205, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+.paper-grid {
+    background-image:
+        linear-gradient(rgba(169, 129, 46, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(169, 129, 46, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+.btn-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+.btn-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(243, 233, 205, 0.35),
+        transparent
+    );
+    transform: translateX(-130%) skewX(-12deg);
+    pointer-events: none;
+}
+.btn-shimmer:hover::after {
+    animation: shimmer-sweep 1.1s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .blueprint-drift,
+    .blueprint-drift-slow {
+        animation: none !important;
+    }
+    .draw-line {
+        animation: none !important;
+        stroke-dashoffset: 0 !important;
+    }
+    .btn-shimmer:hover::after {
+        animation: none !important;
+    }
 }

@@ -9,7 +9,8 @@
     <title>{{ $title ?? 'لوحة التحكم' }} - {{ setting('site_name', config('app.name')) }}</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|fraunces:500,600,700,800,900&display=swap"
+    <link
+        href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|fraunces:500,600,700,800,900|ibm-plex-sans-arabic:400,500,600,700|reem-kufi:500,600,700&display=swap"
         rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

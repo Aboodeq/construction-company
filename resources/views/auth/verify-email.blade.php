@@ -1,30 +1,28 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
+<x-guest-layout title="تفعيل البريد الإلكتروني">
+    <p class="reveal reveal-d1 text-xs font-medium uppercase tracking-widest text-brass">خطوة أخيرة</p>
+    <h2 class="reveal reveal-d2 mt-3 font-display text-4xl font-semibold text-ink text-balance">فعّل بريدك الإلكتروني</h2>
+    <p class="reveal reveal-d3 mt-3 text-sm leading-6 text-ink-soft">
+        أرسلنا رابط تفعيل إلى بريدك الإلكتروني، الرجاء الضغط عليه لتفعيل حسابك. إن لم تصلك الرسالة يمكنك طلب رابط جديد.
+    </p>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        <div class="reveal reveal-d3 mt-6 flex items-center gap-2 rounded-lg border border-forest/15 bg-forest/5 px-4 py-3 text-sm text-forest">
+            تم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني.
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
+    <div class="reveal reveal-d4 mt-9 flex items-center justify-between gap-3">
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
-
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
+            <x-primary-button class="btn-shimmer">
+                إعادة إرسال رابط التفعيل
+            </x-primary-button>
         </form>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
+            <button type="submit" class="text-sm font-medium text-ink-soft transition hover:text-brass">
+                تسجيل الخروج
             </button>
         </form>
     </div>

@@ -38,9 +38,11 @@
 
         <div class="hidden h-6 w-px bg-line sm:block"></div>
 
-        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-brass-soft">
+        <a href="{{ route('admin.profile.edit') }}"
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-brass-soft transition hover:bg-brass"
+            title="الملف الشخصي">
             {{ mb_substr(auth()->user()->name, 0, 1) }}
-        </div>
+        </a>
 
     </div>
 

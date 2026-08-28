@@ -1,58 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Construction Company Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based website and admin panel for a construction company: services, projects/portfolio,
+blog, testimonials, quote requests, bookings, and an internal admin panel for managing all of it.
 
-## About Laravel
+The public site and the admin panel are both Arabic-first and right-to-left (RTL).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Laravel 13** / PHP 8.3
+- **Blade + Alpine.js + Tailwind CSS v4** — server-rendered views, no SPA framework
+- **spatie/laravel-permission** — role- and permission-based access control for the admin panel
+- **spatie/laravel-sluggable** — automatic slugs for services, projects, blog posts, categories
+- **spatie/laravel-sitemap** — sitemap generation
+- **intervention/image** — image processing for uploads
+- **Pest** — testing
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Getting started
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+By default `.env.example` uses SQLite for a zero-config start:
 
-## Contributing
+```bash
+touch database/database.sqlite
+php artisan migrate --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+For local development closer to production, switch `DB_CONNECTION` to `mysql` and provide real
+credentials before migrating — this is what the checked-in `.env` for this project actually uses
+(database `construction_company`). SQLite stays the driver for the automated test suite regardless
+of what `.env` points at — see `phpunit.xml`, which pins `DB_CONNECTION=sqlite` /
+`DB_DATABASE=:memory:` for every test run.
 
-## Code of Conduct
+```bash
+composer run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This runs the PHP server, queue listener, log tailer (`pail`), and Vite dev server together.
 
-## Security Vulnerabilities
+## Admin panel
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The admin panel lives at a configurable prefix, set via `ADMIN_PATH` in `.env` (defaults to
+`office-panel`). Only users with the `admin` or `editor` role (see
+`database/seeders/RolePermissionSeeder.php`) and an active account can enter it — there is no
+public self-registration by design; accounts are created by an administrator.
 
-## License
+Seed a default admin account with:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan db:seed --class=AdminUserSeeder
+```
+
+This creates `admin@construction-company.test` / `password` with the `admin` role. **Change this
+password before deploying anywhere real.**
+
+## Locale
+
+The application locale is Arabic (`APP_LOCALE=ar`). Framework-level strings (validation messages,
+auth/password-reset messages, pagination) are translated in `lang/ar/`. Admin-panel and public-site
+copy is written directly in Arabic in the Blade views rather than routed through `lang/` files —
+this codebase does not currently support a second language; see the project roadmap if that
+changes.
+
+## Testing
+
+```bash
+php artisan test
+```
+
+## Code style
+
+```bash
+vendor/bin/pint
+```
