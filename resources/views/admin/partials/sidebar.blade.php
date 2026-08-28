@@ -52,7 +52,9 @@
                         الأسئلة الشائعة
                     </x-admin.nav-link>
                 @endcan
-                <x-admin.nav-link :href="route('admin.dashboard')" :active="false" icon="users">فريق العمل</x-admin.nav-link>
+                @can('team.view')
+                    <x-admin.nav-link :href="route('admin.team.index')" :active="request()->routeIs('admin.team.*')" icon="users">فريق العمل</x-admin.nav-link>
+                @endcan
             </x-admin.nav-section>
 
             <x-admin.nav-section title="الطلبات">

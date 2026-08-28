@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProjectImageController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceImageController;
+use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -69,6 +70,16 @@ Route::prefix('faqs')->name('faqs.')->group(function () {
     Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
     Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
     Route::patch('/{faq}/toggle-published', [FaqController::class, 'togglePublished'])->name('toggle-published');
+});
+
+Route::prefix('team')->name('team.')->group(function () {
+    Route::get('/', [TeamMemberController::class, 'index'])->name('index');
+    Route::get('/create', [TeamMemberController::class, 'create'])->name('create');
+    Route::post('/', [TeamMemberController::class, 'store'])->name('store');
+    Route::get('/{teamMember}/edit', [TeamMemberController::class, 'edit'])->name('edit');
+    Route::put('/{teamMember}', [TeamMemberController::class, 'update'])->name('update');
+    Route::delete('/{teamMember}', [TeamMemberController::class, 'destroy'])->name('destroy');
+    Route::patch('/{teamMember}/toggle-published', [TeamMemberController::class, 'togglePublished'])->name('toggle-published');
 });
 
 Route::prefix('users')->name('users.')->group(function () {
