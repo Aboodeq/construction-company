@@ -92,6 +92,7 @@
         },
     }"
     x-init="start(); setInterval(() => poll(), 6000)"
+    @open-chat-widget.window="open = true; unread = 0; $nextTick(() => scrollToBottom())"
     class="fixed bottom-6 left-6 z-50"
 >
     {{-- Toggle bubble --}}

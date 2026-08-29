@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\ChatWidgetController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('coming-soon');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('chat')->name('chat.')->middleware('throttle:30,1')->group(function () {
     Route::post('/start', [ChatWidgetController::class, 'start'])->name('start');

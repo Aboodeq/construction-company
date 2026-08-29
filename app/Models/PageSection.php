@@ -30,9 +30,15 @@ class PageSection extends Model
      */
     public static function getByKey(string $key): ?self
     {
-        return Cache::rememberForever("page_section_{$key}", function () use ($key) {
-            return static::where('key', $key)->first();
+        // Cache the raw attributes array, not the model itself: the app disables
+        // unserializing arbitrary objects from the cache (config/cache.php
+        // `serializable_classes`), which would otherwise silently hydrate this
+        // back as a useless __PHP_Incomplete_Class on every cache hit.
+        $attributes = Cache::rememberForever("page_section_{$key}", function () use ($key) {
+            return static::where('key', $key)->first()?->getAttributes();
         });
+
+        return $attributes ? (new static)->newFromBuilder($attributes) : null;
     }
 
     /**
